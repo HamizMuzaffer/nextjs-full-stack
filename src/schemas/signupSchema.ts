@@ -1,5 +1,7 @@
 import {z} from 'zod'
 
+// Validation for sign in schema 
+
 export const usernameValidation = z 
  .string()
  .min(2,"username must be atleast 2 characters")

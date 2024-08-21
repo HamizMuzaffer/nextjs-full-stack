@@ -4,6 +4,7 @@ import mongoose from "mongoose"
 type ConnectionObject = {
     isConnceted? : number
 }
+// connecting mongoDB with project 
 
 const connection : ConnectionObject = {}
 async function dbConnect(): Promise<void>{
