@@ -3,12 +3,17 @@ import UserModel from "@/models/User";
 import bcrypt from "bcryptjs"
 import { sendVerificationEmail } from "@/helpers/sendVerificationEmail";
 
+// creating api for signup process
 
 export async function POST(request: Request) {
     await dbConnect()
 
     try {
+        // recieving singup data from user request
+
         const { username, email, password } = await request.json()
+        
+        // check if user is avalaible and verified with similar name 
 
         const existingUserVerifiedByUsername = await UserModel.findOne({
             username: username,
@@ -21,10 +26,18 @@ export async function POST(request: Request) {
                 error: "User Already Exists"
             })
         }
-        const existingUserByEmail = await UserModel.findOne({ email })
-        const verifyCode = Math.floor(100000 + Math.random() * 900000).toString()
 
+        // check if user is avalaible and verified with similar email 
+
+        const existingUserByEmail = await UserModel.findOne({ email })
+
+        // generating otp for email verification
+
+        const verifyCode = Math.floor(100000 + Math.random() * 900000).toString()
+            
         if (existingUserByEmail) {
+            // checking if user is verified 
+
             if (existingUserByEmail.isVerified) {
                 return Response.json({
                     success: false,
@@ -36,6 +49,8 @@ export async function POST(request: Request) {
                 )
             }
             else {
+                // if user is not verified updating a user with same email or username 
+
                 const hashedPassword = await bcrypt.hash(password, 10);
                 existingUserByEmail.password = hashedPassword;
                 existingUserByEmail.verifyCode = verifyCode;
@@ -49,6 +64,8 @@ export async function POST(request: Request) {
             })
         }
         else {
+            // if nothing is similar the user still need to be created 
+
             const hashedPassword = bcrypt.hash(password, 10)
             const expiryDate = new Date()
             expiryDate.setHours(expiryDate.getHours() + 1)
