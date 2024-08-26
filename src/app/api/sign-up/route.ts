@@ -66,7 +66,7 @@ export async function POST(request: Request) {
         else {
             // if nothing is similar the user still need to be created 
 
-            const hashedPassword = bcrypt.hash(password, 10)
+            const hashedPassword = await bcrypt.hash(password, 10)
             const expiryDate = new Date()
             expiryDate.setHours(expiryDate.getHours() + 1)
 
