@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation'
 import { signupSchema } from '@/schemas/signupSchema'
 import axios, { AxiosError } from "axios"
 import { ApiResponse } from '@/types/ApiResponse'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Loader2 } from 'lucide-react'
@@ -62,13 +62,14 @@ const page = () => {
             const response = await axios.post<ApiResponse>('/api/sign-up', data)
             toast({
                 title: "success",
-                description: response.data.message
+                description: response.data.message,
+                
             })
-
             router.replace(`/verify/${username}`)
             setIsSubmitting(false)
 
-        } catch (error) {
+        }
+        catch (error) {
             console.error("error in signup of user", error)
             const axiosError = error as AxiosError<ApiResponse>
             let errorMessage = axiosError.response?.data.message
@@ -79,6 +80,7 @@ const page = () => {
             })
             setIsSubmitting(false)
         }
+
     }
     return (
         <div className='flex justify-center items-center min-h-screen bg-gray-100'>
