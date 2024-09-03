@@ -11,26 +11,11 @@ export async function POST(request: Request) {
         const { username, code } = await request.json()
         const decodedUsername = decodeURIComponent(username)
         const decodedCode = decodeURIComponent(code)
-         
-        const ValidatedCode = z.object({
-            code : verifySchema
-        })
-        // Zod validation for code 
-        try {
-            ValidatedCode.parse({ code: decodedCode });
-        } catch (validationError) {
-            return new Response(JSON.stringify({
-                success: false,
-                message: "Invalid Code Format"
-            }), {
-                status: 400
-            });
-        }
+        
 
-    
         // Finding User in Database 
         const user = await UserModel.findOne({ username: decodedUsername })
-       
+
 
         if (!user) {
             return Response.json({
@@ -43,43 +28,43 @@ export async function POST(request: Request) {
                 })
         }
 
-        const isValidCode = user.verifyCode == code
+        const isValidCode = user.verifyCode == decodedCode
         const isCodeNotExpired = new Date(user.verifyCodeExpiry) > new Date()
 
         if (isValidCode && isCodeNotExpired) {
             user.isVerified = true;
             await user.save()
-        
 
-        return Response.json({
-            success: true,
-            message: "Account Verified Successfully"
-        },
-         {
-            status : 200
-         }
-         )
-        }
-         else if (!isCodeNotExpired) {
-              return Response.json({
-                  success : false,
-                  message : "Code in Expired"
-              },
-               {
-                status : 400
-               })
-         }
 
-         else {
             return Response.json({
-                success : false,
-                message : "Incorrect Verification Code"
+                success: true,
+                message: "Account Verified Successfully"
             },
-         {
-            status : 400
-         })
-         }
-         
+                {
+                    status: 200
+                }
+            )
+        }
+        else if (!isCodeNotExpired) {
+            return Response.json({
+                success: false,
+                message: "Code in Expired"
+            },
+                {
+                    status: 400
+                })
+        }
+
+        else {
+            return Response.json({
+                success: false,
+                message: "Incorrect Verification Code"
+            },
+                {
+                    status: 400
+                })
+        }
+
     } catch (error) {
         console.log("Error Verifying User", error)
         return Response.json(

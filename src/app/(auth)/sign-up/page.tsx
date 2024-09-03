@@ -15,8 +15,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Loader2 } from 'lucide-react'
-const page = () => {
 
+const page = () => {
+     // states initialization 
     const [username, setUsername] = useState("")
     const [usernameMessage, setUsernameMessage] = useState("")
     const [isCheckingUsername, setIsCheckingUsername] = useState(false)
@@ -36,6 +37,8 @@ const page = () => {
     })
 
     useEffect(() => {
+        // Checking the username on every re-render 
+
         const checkUsernameUnique = async () => {
             if (username) {
                 setIsCheckingUsername(true)
@@ -59,6 +62,8 @@ const page = () => {
     const onSubmit = async (data: z.infer<typeof signupSchema>) => {
         setIsSubmitting(true)
         try {
+            // sending the form data through post request to server 
+            
             const response = await axios.post<ApiResponse>('/api/sign-up', data)
             toast({
                 title: "success",
@@ -70,6 +75,7 @@ const page = () => {
 
         }
         catch (error) {
+
             console.error("error in signup of user", error)
             const axiosError = error as AxiosError<ApiResponse>
             let errorMessage = axiosError.response?.data.message

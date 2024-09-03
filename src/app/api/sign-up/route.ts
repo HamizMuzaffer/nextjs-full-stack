@@ -106,7 +106,7 @@ export async function POST(request: Request) {
                 message: "User Signed up succesfully. Please verify your email"
             },
                 {
-                    status: 500
+                    status: 200
                 }
             )
         }
