@@ -1,9 +1,13 @@
-import React from 'react'
-
+import React from "react";
 const page = () => {
   return (
-    <div>about</div>
-  )
-}
+    <>
+      <div>Dashboard</div>
+      <div>
 
-export default page
+      </div>
+    </>
+  );
+};
+
+export default page;
