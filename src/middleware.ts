@@ -1,34 +1,40 @@
-import { NextResponse,NextRequest } from 'next/server'
-export { default } from "next-auth/middleware"
-import { getToken } from 'next-auth/jwt'
-// This function can be marked `async` if using `await` inside
+import { NextResponse, NextRequest } from 'next/server';
+import { getToken } from 'next-auth/jwt';
+
 export async function middleware(request: NextRequest) {
-    const token = await getToken({req:request})
-    const url = request.nextUrl
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET, // Make sure it's the same across the app
+  });
 
-    if (token && 
-        ( url.pathname.startsWith("/sign-in") ||  
-         url.pathname.startsWith("/sign-up") ||  
-         url.pathname.startsWith("/verify") ||  
-         url.pathname.startsWith("/")
-        )
-    ) {
-        return NextResponse.redirect(new URL('/dashboard', request.url))
-    }
+  const url = request.nextUrl;
 
-    if(!token && (url.pathname.startsWith("/dashboard"))){
-        return NextResponse.redirect(new URL('/sign-in', request.url))
-    }
-return NextResponse.next()
+  console.log("Token in Middleware:", token); // Check if the token shows here
+
+  // Handle redirects
+  if (token && (
+    url.pathname.startsWith('/sign-in') ||
+    url.pathname.startsWith('/sign-up') ||
+    url.pathname.startsWith('/verify') ||
+    url.pathname === '/'
+  )) {
+    return NextResponse.redirect(new URL('/user-dashboard', request.url));
+  }
+
+  if (!token && url.pathname.startsWith('/user-dashboard')) {
+    return NextResponse.redirect(new URL('/sign-in', request.url));
+  }
+
+  return NextResponse.next();
 }
- 
-// See "Matching Paths" below to learn more
+
+// Match specific routes
 export const config = {
-  matcher:[ 
+  matcher: [
     '/sign-in',
     '/sign-up',
     '/',
-    '/dashboard/:path*',
-    '/verify/:path'
-  ]
-}
+    '/user-dashboard',
+    '/verify/:path*',
+  ],
+};

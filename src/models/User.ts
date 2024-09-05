@@ -4,6 +4,7 @@ import mongoose, { Schema, model, Document } from "mongoose";
 // Interface for adding Messages 
 
 export interface Message extends Document {
+    _id : string
     content: String;
     createdAt: Date,
 }

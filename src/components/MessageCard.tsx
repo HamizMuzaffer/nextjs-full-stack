@@ -30,6 +30,7 @@ import { Message } from "@/models/User";
 type MessageCardProps = {
   message: Message;
   onMessageDelete: (messageId:any) => void;
+  key : string
 };
 const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
   const { toast } = useToast();
