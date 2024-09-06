@@ -15,7 +15,7 @@ export async function POST(request: Request) {
 
         const { text } = await generateText({
             model: google('gemini-1.5-pro-latest'),
-            prompt: "Create a list of three open-ended and engaging questions formatted as a single string. Each question should be seprated by '||'. These questions are for an anonymous social messaging platform,like qooh.me, and should be suitable for a diverse audience. For example your output should be stuctured like this: 'What's a hobby that you've recently started? || If you could have dinner with any historical figure, who would it be? || What's a simple thing that makes you happy?'Ensure the questions are intriguing and foster curiosity.",
+            prompt: "Create a list of three open-ended and engaging questions formatted as a single string. Each question should be seprated by '||'. These questions are for an anonymous social messaging platform,like qooh.me, and should be suitable for a diverse audience. For example your output should be stuctured like this: 'What's a hobby that you've recently started? || If you could have dinner with any historical figure, who would it be? || What's a simple thing that makes you happy?'Ensure the questions are intriguing and foster curiosity. Also make sure there is no repition in questions.",
         });
 
         return new Response(JSON.stringify({ text }), {

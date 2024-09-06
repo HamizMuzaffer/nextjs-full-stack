@@ -12,10 +12,11 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { signInSchema } from '@/schemas/signInSchema'
 import { signIn } from 'next-auth/react'
-
+import { Loader2 } from 'lucide-react'
 const page = () => {
   // states initialization 
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [loading, setLoading] = useState(false)
   const { toast } = useToast()
   const router = useRouter()
 
@@ -31,18 +32,20 @@ const page = () => {
 
 
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
+    setLoading(true)
     const result = await signIn('credentials', {
       redirect: false,
       identifier: data.identifier,
       password: data.password
     })
     console.log(result)
-    if (result?.error) {
+    if (result?.error) { 
       toast({
         title: "login failed",
         description: "Incorrect username or password",
         variant: "destructive"
       })
+      setLoading(false)
     }
     if(result?.url){
       router.replace("/user-dashboard")
@@ -64,7 +67,7 @@ const page = () => {
                 <FormItem>
                   <FormLabel>Email or Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="email or username" {...field} />
+                    <Input placeholder="email or username" {...field} required/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -78,15 +81,28 @@ const page = () => {
                   <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input placeholder="password" {...field}
-                      type='password' />
+                      type='password' required/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <div className='flex flex-col justify-center items-center'>
-              <Button type='submit' >
-                Sign in
+              <Button type='submit' className='px-4' >
+                {
+                  loading ? (
+                    <>
+                   <div className='flex justify-center items-center'>
+                    <Loader2  className='animate-spin w-2 h-2 mx-4'/>
+                   </div>
+                   </>
+                  ) : 
+                  (
+                    <>
+                    <span>Login</span>
+                    </>
+                  )
+                }
               </Button>
             </div>
           </form>

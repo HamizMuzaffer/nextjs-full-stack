@@ -30,7 +30,6 @@ export async function GET(request: Request) {
             { $group: { _id: "_id", messages: { $push: "$messages" } } }
 
         ])
-          console.log("found user", user)
         if (!user || user.length === 0) {
             return Response.json({
                 success: false,
@@ -42,7 +41,6 @@ export async function GET(request: Request) {
                 })
         }
 
-         console.log("messages:",user[0].messages)
         return Response.json({
             success: true,
             messages: user[0].messages

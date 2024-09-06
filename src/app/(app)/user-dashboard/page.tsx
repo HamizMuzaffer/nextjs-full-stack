@@ -1,6 +1,6 @@
 'use client';
 
-import { MessageCard } from '@/components/MessageCard';
+import MessageCard  from '@/components/MessageCard';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
@@ -180,8 +180,7 @@ function UserDashboard() {
             <MessageCard
               key={message._id}
               message={message}
-              description = {message}
-              onDelete={handleDeleteMessage}
+              onMessageDelete={handleDeleteMessage}
             />
           ))
         ) : (
