@@ -11,7 +11,6 @@ export async function GET(request: Request) {
 
     const session = await getServerSession(authOptions);
     const user: User = session?.user as User
-
     if (!session || !session.user) {
         return Response.json({
             status: false,
@@ -25,13 +24,13 @@ export async function GET(request: Request) {
     // mongodb aggregation for finding messages for specific and grouping it
     try {
         const user = await UserModel.aggregate([
-            { $match: { id: userId } },
+            { $match: { _id: userId } },
             { $unwind: '$messages' },
             { $sort: { "messages.createdAt": -1 } },
             { $group: { _id: "_id", messages: { $push: "$messages" } } }
 
         ])
-
+          console.log("found user", user)
         if (!user || user.length === 0) {
             return Response.json({
                 success: false,
@@ -43,7 +42,7 @@ export async function GET(request: Request) {
                 })
         }
 
-
+         console.log("messages:",user[0].messages)
         return Response.json({
             success: true,
             messages: user[0].messages

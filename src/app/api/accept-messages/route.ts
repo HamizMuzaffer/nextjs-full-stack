@@ -24,9 +24,7 @@ export async function POST(request: Request) {
     try {
         const updatedUser = await UserModel.findByIdAndUpdate(
             userId,
-            { isAcceptingMessage: true },
-            { new: true }
-
+            { isAcceptingMessage: acceptMessages },
         )
 
         if (!updatedUser) {
@@ -44,7 +42,7 @@ export async function POST(request: Request) {
             message: "User status to accepting messages updated sucessfully"
         },
             {
-                status: 401
+                status: 201
             })
     } catch (error) {
         return Response.json({

@@ -9,9 +9,9 @@ export async function middleware(request: NextRequest) {
 
   const url = request.nextUrl;
 
-  console.log("Token in Middleware:", token); // Check if the token shows here
 
   // Handle redirects
+
   if (token && (
     url.pathname.startsWith('/sign-in') ||
     url.pathname.startsWith('/sign-up') ||
