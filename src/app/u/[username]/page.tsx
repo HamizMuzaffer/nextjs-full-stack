@@ -149,7 +149,7 @@ export default function SendMessage() {
           <CardHeader>
             <h3 className="text-xl font-semibold">Messages</h3>
           </CardHeader>
-          <CardContent className="flex flex-col space-y-4">
+          <CardContent className="flex flex-col space-y-4 flex-wrap">
             {generatedMessages.map((message, index) => (
               <Button
                 key={index}

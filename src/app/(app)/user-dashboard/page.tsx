@@ -9,7 +9,7 @@ import { Message } from '@/models/User';
 import { ApiResponse } from '@/types/ApiResponse';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios, { AxiosError } from 'axios';
-import { Loader2, RefreshCcw } from 'lucide-react';
+import { Loader2, RefreshCcw} from 'lucide-react';
 import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -21,10 +21,11 @@ function UserDashboard() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSwitchLoading, setIsSwitchLoading] = useState(false);
-
+  const [deleteLoading, setdeleteLoading] = useState(false)
   const { toast } = useToast();
 
   const handleDeleteMessage = (messageId: string) => {
+    setdeleteLoading(true)
     setMessages(messages.filter((message) => message._id !== messageId));
   };
 
@@ -32,7 +33,6 @@ function UserDashboard() {
 
   const form = useForm({
     resolver: zodResolver(acceptMessageSchema),
-
   });
 
   const { register, watch, setValue } = form;
@@ -42,7 +42,9 @@ function UserDashboard() {
     setIsSwitchLoading(true);
     try {
       const response = await axios.get('/api/accept-messages');
-      setValue('acceptMessages', response.data.isAcceptingMessage);
+      if(response.data) {
+      setValue('acceptMessages', response.data.acceptingMessage);
+      }
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       toast({
@@ -180,6 +182,7 @@ function UserDashboard() {
             <MessageCard
               key={message._id}
               message={message}
+              isloading={deleteLoading}
               onMessageDelete={handleDeleteMessage}
             />
           ))

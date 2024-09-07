@@ -1,5 +1,5 @@
 "use client";
-
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 
 import {
   AlertDialog,
@@ -24,24 +24,28 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { ApiResponse } from "@/types/ApiResponse";
 import { Message } from "@/models/User";
+
 type MessageCardProps = {
   message: Message;
-  onMessageDelete: (messageId:any) => void;
-  key : string
+  onMessageDelete: (messageId: any) => void;
+  key: string;
+  isloading : boolean
 };
-const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
+const MessageCard = ({ message, onMessageDelete, isloading }: MessageCardProps) => {
   const { toast } = useToast();
   const handleDeleteConfirm = async () => {
-    const response = await axios.delete<ApiResponse>(`/api/delete-message/${message._id}`);
+    const response = await axios.delete<ApiResponse>(
+      `/api/delete-message/${message._id}`
+    );
     toast({
-      title : response.data.message
-    })
-     onMessageDelete(message._id)
+      title: response.data.message,
+    });
+    onMessageDelete(message._id);
   };
   return (
     <Card className="card-bordered">
@@ -50,8 +54,12 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
           <CardTitle>{message.content}</CardTitle>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant='destructive'>
-                <X className="w-5 h-5" />
+              <Button variant="destructive" className="mr-2">
+                {isloading ? (
+                  <Loader2 className="animate-spin w-5 h-5" />
+                ) : (
+                  <X className="w-5 h-5" />
+                )}
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -63,9 +71,7 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>
-                  Cancel
-                </AlertDialogCancel>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction onClick={handleDeleteConfirm}>
                   Continue
                 </AlertDialogAction>
@@ -74,7 +80,7 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
           </AlertDialog>
         </div>
         <div className="text-sm">
-          {dayjs(message.createdAt).format('MMM D, YYYY h:mm A')}
+          {dayjs(message.createdAt).format("MMM D, YYYY h:mm A")}
         </div>
       </CardHeader>
       <CardContent></CardContent>

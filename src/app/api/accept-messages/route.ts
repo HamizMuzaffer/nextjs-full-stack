@@ -27,6 +27,8 @@ export async function POST(request: Request) {
             { isAcceptingMessage: acceptMessages },
         )
 
+        await updatedUser?.save()
+
         if (!updatedUser) {
             return Response.json({
                 success: false,
@@ -84,7 +86,6 @@ export async function GET(request : Request){
                     status: 404
                 })
         }
-    
         return Response.json({
             success : true,
             acceptingMessage : foundUser.isAcceptingMessage
