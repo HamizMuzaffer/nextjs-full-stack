@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button'
 import { signInSchema } from '@/schemas/signInSchema'
 import { signIn } from 'next-auth/react'
 import { Loader2 } from 'lucide-react'
-const page = () => {
+const Page = () => {
   // states initialization 
   const [loading, setLoading] = useState(false)
   const { toast } = useToast()
@@ -116,4 +116,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

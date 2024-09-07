@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Loader2 } from 'lucide-react'
 
-const page = () => {
+const Page = () => {
      // states initialization 
     const [username, setUsername] = useState("")
     const [usernameMessage, setUsernameMessage] = useState("")
@@ -25,16 +25,6 @@ const page = () => {
     const debounced = useDebounceCallback(setUsername, 300)
     const { toast } = useToast()
     const router = useRouter()
-
-    // zod implementation 
-    const form = useForm<z.infer<typeof signupSchema>>({
-        resolver: zodResolver(signupSchema),
-        defaultValues: {
-            username: "",
-            email: "",
-            password: ""
-        }
-    })
 
     useEffect(() => {
         // Checking the username on every re-render 
@@ -57,6 +47,16 @@ const page = () => {
         }
         checkUsernameUnique()
     }, [username])
+
+    // zod implementation 
+    const form = useForm<z.infer<typeof signupSchema>>({
+        resolver: zodResolver(signupSchema),
+        defaultValues: {
+            username: "",
+            email: "",
+            password: ""
+        }
+    })
 
 
     const onSubmit = async (data: z.infer<typeof signupSchema>) => {
@@ -169,4 +169,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page
